@@ -53,7 +53,7 @@ for n in range(players):
     users.append(tank.tank(bound, AI=False, ID=n+1))
     users[-1].add_env(window, zero_pos, sprites[6], tile_size, users)
     users[-1].init()
-    users[-1].player_name = tank.key_input(window, font_draw, tile_size, "Enter player name: ")
+    users[-1].player_name = tank.key_input(window, font_draw, tile_size, "Enter player name for " + str(users[-1].player_name))
 
 #functions
 def update_screen():

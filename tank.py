@@ -39,7 +39,7 @@ class tank:
                 if self.ai_balance[0] <= void < self.ai_balance[1]: #move
                     self.move()
                 elif self.ai_balance[1] <= void < self.ai_balance[2]: #shoot
-                    pass
+                    self.shoot()
                 elif self.ai_balance[5] <= void <= self.ai_balance[6]: #wait
                     return True
                 return False
@@ -76,7 +76,25 @@ class tank:
                     self.tokens -= 1
         
     def shoot(self):
-        pass
+        t_pos_x = self.pos_x
+        t_pos_y = self.pos_y
+        for player in self.players:
+            if not (player is self):
+                m_pos_x, m_pos_y = player.get_pos()
+                check   = []
+                if t_pos_x > m_pos_x:
+                    check.append(t_pos_x); check.append(m_pos_x)
+                else:
+                    check.append(m_pos_x); check.append(t_pos_x)
+                if t_pos_y > m_pos_y:
+                    check.append(t_pos_y); check.append(m_pos_y)
+                else:
+                    check.append(m_pos_y); check.append(t_pos_y)
+                if check[0] - check[1] <= self.shoot_range:
+                    if check[2] - check[3] <= self.shoot_range:
+                        player.lives -= 1
+                        self.tokens -= 1
+                        return True
     
     def action_shoot(self, pos):
         t_pos_x = self.pos_x
@@ -162,14 +180,18 @@ def key_input(window, font, tilesize, hint):
                 if not k_hold:
                     k_hold = True
                     try:
-                        return_string += key_table[n]
+                        if len(return_string) <= 0:
+                            return_string += key_table[n]
+                        else:
+                            return_string += key_table[n].lower()
                         update = True
                     except KeyError:
                         pass
                     print(n)
         if update:
             p.draw.rect(window, (127,127,255), (r_zero_x, r_zero_y, r_size_x, r_size_y))
-            font.draw(return_string, tilesize, (tilesize + r_zero_x, tilesize * 3 + r_zero_y))
+            font.draw(hint, tilesize, (tilesize + r_zero_x, tilesize + r_zero_y))
+            font.draw(return_string, tilesize, (tilesize + r_zero_x, tilesize * 4 + r_zero_y))
             p.display.flip()
             update = False
         if k_count == 0:
