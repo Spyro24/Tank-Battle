@@ -49,8 +49,28 @@ class tank:
         moved = False
         if self.ai_player:
             while not moved:
-                move_x = random.randint(-1, 1)
-                move_y = random.randint(-1, 1)
+                choice = random.randint(0,4)
+                if choice < 3:
+                    move_x = random.randint(-1, 1)
+                    move_y = random.randint(-1, 1)
+                else:
+                    choice = random.randint(0, len(self.players) - 1)
+                    if self.players[choice] is not self and self.players[choice].player_is_alive():
+                        goto = self.players[choice].get_pos()
+                        x_move = 0
+                        y_move = 0
+                        if goto[0] < self.pos_x:
+                            x_move = -1
+                        elif goto[0] > self.pos_x:
+                            x_move = 1
+                        if goto[1] < self.pos_y:
+                            y_move = -1
+                        elif goto[1] > self.pos_y:
+                            y_move = 1
+                        if self.action_move((x_move, y_move)):
+                            self.tokens -= 1
+                            moved = True
+                    break
                 if 0 <= (move_x + self.pos_x) < self.max_pos_x:
                     if 0 <= (move_y + self.pos_y) < self.max_pos_y:
                         can_move = True
@@ -74,6 +94,8 @@ class tank:
                     self.pos_x += dir_[0]
                     self.pos_y += dir_[1]
                     self.tokens -= 1
+                    return True
+        return False
         
     def shoot(self):
         t_pos_x = self.pos_x
