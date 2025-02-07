@@ -60,7 +60,7 @@ def update_screen():
     window.blit(ground, (blit_pos[0], blit_pos[1]))
     for user in users:
         user.draw_to_screen()
-    p.display.flip()
+    #p.display.flip()
 
 def human_player(player):
     void = window.get_rect().midbottom
@@ -143,14 +143,16 @@ while not end:
                 end = True
             
         window.fill((0, 0, 0))
+        update_screen()
+        p.display.flip()
         user.add_token()
         aip = user.ai_player
         if not user.player_is_alive():
             continue 
         if aip:
             while True:
-                round_fin = user.ai_round()
                 update_screen()
+                round_fin = user.ai_round()
                 if round_fin:
                     time.sleep(0.05)
                     break

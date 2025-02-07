@@ -1,6 +1,7 @@
 #(c) 2025 Spyro24
 import random
 import pygame as p
+import time
 
 class tank:
     def __init__(self, bound, AI=True, ID=1):
@@ -114,6 +115,10 @@ class tank:
                     check.append(m_pos_y); check.append(t_pos_y)
                 if check[0] - check[1] <= self.shoot_range:
                     if check[2] - check[3] <= self.shoot_range:
+                        draw_pos_enem = player.get_pos()
+                        p.draw.line(self.window, (255,0,127), (self.pos_x * self.tile_size + (self.tile_size / 2) + self.null[0], self.pos_y * self.tile_size + (self.tile_size / 2) + self.null[1]), (draw_pos_enem[0] * self.tile_size + (self.tile_size / 2) + self.null[0], draw_pos_enem[1] * self.tile_size + (self.tile_size / 2) + self.null[1]), int(self.tile_size / 8))
+                        p.display.flip()
+                        time.sleep(0.05)
                         player.lives -= 1
                         self.tokens -= 1
                         return True
@@ -137,8 +142,12 @@ class tank:
                 for player in self.players:
                     if not (player is self):
                         if player.get_pos() == pos:
-                            player.lives -= 1
                             self.tokens -= 1
+                            draw_pos_enem = player.get_pos()
+                            p.draw.line(self.window, (255,0,0), (self.pos_x * self.tile_size + (self.tile_size / 2) + self.null[0], self.pos_y * self.tile_size + (self.tile_size / 2) + self.null[1]), (draw_pos_enem[0] * self.tile_size + (self.tile_size / 2) + self.null[0], draw_pos_enem[1] * self.tile_size + (self.tile_size / 2) + self.null[1]), int(self.tile_size / 8))
+                            p.display.flip()
+                            time.sleep(0.05)
+                            player.lives -= 1
                             return True
         return False
     
