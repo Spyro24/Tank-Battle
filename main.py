@@ -6,27 +6,30 @@ import tank
 import tile_handler
 import font
 import clickgrid
+p.init()
 
-players    = 1
-bots       = 7
-end        = False
-bound      = (24,16)
-window     = p.display.set_mode((1200, 720))
-users      = []
-sprites    = tile_handler.load_tiles("./sprites.png", {"size":"6x6"}, mode="single")
-tile_size  = 32
-void       = window.get_rect().centerx
-blit_pos   = void - (tile_size * (bound[0] / 2)), 0
-ground     = p.Surface((tile_size * bound[0], tile_size * bound[1]))
-zero_pos   = window.blit(ground, (blit_pos[0], blit_pos[1])).topleft
-font_draw  = font.font(window, "./standard")
-field_sel  = clickgrid.ClickGrid(bound, window.blit(ground, (blit_pos[0], blit_pos[1])))
-mouse_hold = False
-scaleds    = [p.transform.scale(sprites[3], (tile_size * 2, tile_size *2)),
-              p.transform.scale(sprites[4], (tile_size * 2, tile_size *2)),
-              p.transform.scale(sprites[5], (tile_size * 2, tile_size *2))]
-void       = window.get_rect().midbottom
-buttons    = []#[window.blit(scaleds[0], (void[0] + (10 * tile_size), void[1] - (6 * tile_size))), window.blit(scaleds[0], (void[0] + (8 * tile_size), void[1] - (6 * tile_size)))]
+players     = 1
+bots        = 7
+end         = False
+bound       = (24,16)
+window      = p.display.set_mode((1200, 720))
+users       = []
+sprites     = tile_handler.load_tiles("./sprites.png", {"size":"6x6"}, mode="single")
+tile_size   = 32
+void        = window.get_rect().centerx
+blit_pos    = void - (tile_size * (bound[0] / 2)), 0
+ground      = p.Surface((tile_size * bound[0], tile_size * bound[1]))
+zero_pos    = window.blit(ground, (blit_pos[0], blit_pos[1])).topleft
+font_draw   = font.font(window, "./standard")
+field_sel   = clickgrid.ClickGrid(bound, window.blit(ground, (blit_pos[0], blit_pos[1])))
+mouse_hold  = False
+scaleds     = [p.transform.scale(sprites[3], (tile_size * 2, tile_size *2)),
+               p.transform.scale(sprites[4], (tile_size * 2, tile_size *2)),
+               p.transform.scale(sprites[5], (tile_size * 2, tile_size *2))]
+void        = window.get_rect().midbottom
+buttons     = []#[window.blit(scaleds[0], (void[0] + (10 * tile_size), void[1] - (6 * tile_size))), window.blit(scaleds[0], (void[0] + (8 * tile_size), void[1] - (6 * tile_size)))]
+sound_table = [p.mixer.Sound("./sfx/killed.wav"),
+               p.mixer.Sound("./sfx/shoot_bot.wav")]
 
 #init blits
 buttons.append(window.blit(scaleds[0], (void[0] + (10 * tile_size), void[1] - (6 * tile_size))))
@@ -54,6 +57,10 @@ for n in range(players):
     users[-1].add_env(window, zero_pos, sprites[6], tile_size, users)
     users[-1].init()
     users[-1].player_name = tank.key_input(window, font_draw, tile_size, "Enter player name for " + str(users[-1].player_name))
+
+#set sounds
+for user in users:
+    user.sound_table = sound_table
 
 #functions
 def update_screen():
